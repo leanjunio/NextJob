@@ -8,13 +8,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	const { email, password, role } = req.body;
 
-	const { user, error } = await supabase.auth.signUp({ email, password });
+	const { data: { user }, error } = await supabase.auth.signUp({ email, password });
 
 	if (error) {
 		return res.status(500).json({ error: error.message });
 	}
 
-	const { data, roleError } = await supabase
+	const { data, error: roleError } = await supabase
 		.from("user_roles")
 		.insert([{ user_id: user!.id, role }]);
 
@@ -22,5 +22,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		return res.status(500).json({ error: roleError.message });
 	}
 
-	res.status(200).json({ message: "User registered succesfully", user });
+	res.status(200).json({ message: "User registered succesfully", user })
 }
