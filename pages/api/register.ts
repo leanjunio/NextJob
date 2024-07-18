@@ -22,5 +22,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		return res.status(500).json({ error: roleError.message });
 	}
 
-	res.status(200).json({ message: "User registered succesfully", user })
+	res.status(200).json({ message: "User registered succesfully", user });
 }
