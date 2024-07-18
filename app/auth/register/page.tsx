@@ -24,7 +24,9 @@ export default function Register() {
     },
   });
 
-  function onSubmit() { }
+  function onSubmit(values: z.infer<typeof registerSchema>) {
+
+  }
 
   return (
     <Form {...form}>
@@ -59,7 +61,7 @@ export default function Register() {
             </>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button name="register user" type="submit">Submit</Button>
       </form>
     </Form>
   );
