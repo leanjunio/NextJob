@@ -14,9 +14,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
+type RegisterData = z.infer<typeof registerSchema>;
 export default function Register() {
-  const form = useForm<z.infer<typeof registerSchema>>({
+  const { toast } = useToast();
+  const form = useForm<RegisterData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "john.doe@autodesk.com",
@@ -24,7 +28,30 @@ export default function Register() {
     },
   });
 
-  function onSubmit() { }
+  async function onSubmit(data: RegisterData) {
+    try {
+      const res = await fetch("/api/register", {
+        method: "post",
+        body: JSON.stringify(data)
+      });
+
+      if (res?.ok) {
+        toast({
+          title: "Welcome!",
+          description: `${data.email} registered`
+        });
+      } else {
+        const text = await res.text();
+        console.log({ text });
+        toast({
+          title: "Registration failed",
+          description: "Please try again later"
+        });
+      }
+    } catch {
+      console.error("an error occurred");
+    }
+  }
 
   return (
     <Form {...form}>

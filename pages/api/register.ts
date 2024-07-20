@@ -11,12 +11,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	const { data: { user }, error } = await supabase.auth.signUp({ email, password });
 
 	if (error) {
+		console.log({body: req.body})
 		return res.status(500).json({ error: error.message });
 	}
 
 	const { data, error: roleError } = await supabase
 		.from("user_roles")
-		.insert([{ user_id: user!.id, role }]);
+		.insert([{ user_id: user!.id, role: "candidate" }]);
 
 	if (roleError) {
 		return res.status(500).json({ error: roleError.message });
